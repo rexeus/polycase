@@ -1,0 +1,87 @@
+name: Quality Check
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+env:
+  NODE_VERSION: "24"
+  PNPM_VERSION: "10.12.1"
+
+jobs:
+  quality-check:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0 # Fetch all history for all branches
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5.0.0
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Turbo
+        uses: actions/cache@v5.0.4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      - name: Build all packages
+        run: |
+          echo "::group::Building all packages"
+          pnpm run build
+          echo "::endgroup::"
+
+      - name: Run typecheck
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"
+        run: |
+          echo "::group::TypeScript type checking"
+          pnpm run typecheck
+          echo "::endgroup::"
+
+      - name: Check formatting
+        run: |
+          echo "::group::oxfmt format checking"
+          pnpm run format:check
+          echo "::endgroup::"
+
+      - name: Run lint
+        run: |
+          echo "::group::oxlint checking"
+          pnpm run lint
+          echo "::endgroup::"
+
+      - name: Run dry run publish
+        run: |
+          echo "::group::Dry run publishing all packages"
+          pnpm run publish:dry
+          echo "::endgroup::"
+
+      - name: Run tests
+        run: |
+          echo "::group::Running tests"
+          pnpm run test
+          echo "::endgroup::"

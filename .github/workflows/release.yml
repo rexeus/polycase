@@ -1,0 +1,50 @@
+name: Release latest versions
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5.0.0
+
+      - name: Setup node.js
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Cache Turbo
+        uses: actions/cache@v5.0.4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Create and publish versions
+        uses: changesets/action@v1.7.0
+        with:
+          commit: "chore: version packages"
+          title: "chore: version packages"
+          publish: pnpm ci:publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

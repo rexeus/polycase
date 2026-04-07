@@ -1,0 +1,31 @@
+# IDE
+.claude
+.vscode
+.idea
+
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+
+# Temporary files
+tmp/
+
+# OS files
+.DS_Store
+
+# Package files
+*.tgz
+
+# Test reports
+coverage/
+.nyc_output/
+.vitestcache/
+
+# Turborepo
+.turbo
