@@ -11,7 +11,7 @@ function createPackageFixture(packageName: string): {
   readonly repositoryRoot: string;
 } {
   const repositoryRoot = fs.mkdtempSync(
-    path.join(os.tmpdir(), "polycase-build-config-"),
+    path.join(os.tmpdir(), "polycase-build-config-")
   );
   const packageDir = path.join(repositoryRoot, "packages", packageName);
 
@@ -57,22 +57,19 @@ describe("createPackageBuildConfig", () => {
     await config.onSuccess?.();
 
     expect(
-      fs.readFileSync(path.join(packageDir, "dist/lib/runtime.js"), "utf8"),
+      fs.readFileSync(path.join(packageDir, "dist/lib/runtime.js"), "utf8")
     ).toBe("runtime");
     expect(
-      fs.readFileSync(
-        path.join(packageDir, "dist/templates/index.ejs"),
-        "utf8",
-      ),
+      fs.readFileSync(path.join(packageDir, "dist/templates/index.ejs"), "utf8")
     ).toBe("template");
     expect(fs.readFileSync(path.join(packageDir, "dist/LICENSE"), "utf8")).toBe(
-      "license",
+      "license"
     );
     expect(fs.readFileSync(path.join(packageDir, "dist/NOTICE"), "utf8")).toBe(
-      "notice",
+      "notice"
     );
     expect(
-      fs.readFileSync(path.join(packageDir, "dist/custom.txt"), "utf8"),
+      fs.readFileSync(path.join(packageDir, "dist/custom.txt"), "utf8")
     ).toBe("custom");
     expect(postBuildStep).toHaveBeenCalledWith({
       distDir: path.join(packageDir, "dist"),
@@ -97,10 +94,10 @@ describe("createPackageBuildConfig", () => {
     expect(fs.existsSync(path.join(packageDir, "dist/lib"))).toBe(false);
     expect(fs.existsSync(path.join(packageDir, "dist/templates"))).toBe(false);
     expect(fs.readFileSync(path.join(packageDir, "dist/LICENSE"), "utf8")).toBe(
-      "license",
+      "license"
     );
     expect(fs.readFileSync(path.join(packageDir, "dist/NOTICE"), "utf8")).toBe(
-      "notice",
+      "notice"
     );
   });
 
@@ -123,10 +120,10 @@ describe("createPackageBuildConfig", () => {
     await config.onSuccess?.();
 
     expect(
-      fs.readFileSync(path.join(packageDir, "dist/lib/runtime.js"), "utf8"),
+      fs.readFileSync(path.join(packageDir, "dist/lib/runtime.js"), "utf8")
     ).toBe("runtime");
     expect(
-      fs.readFileSync(path.join(packageDir, "dist/caller.txt"), "utf8"),
+      fs.readFileSync(path.join(packageDir, "dist/caller.txt"), "utf8")
     ).toBe("caller");
     expect(onSuccess).toHaveBeenCalledTimes(1);
     expect(executionOrder).toEqual(["caller"]);
@@ -151,7 +148,7 @@ describe("createPackageBuildConfig", () => {
         platform: "node",
         target: "esnext",
         treeshake: true,
-      }),
+      })
     );
     expect(config).not.toHaveProperty("onSuccess");
     expect(fs.existsSync(path.join(packageDir, "dist"))).toBe(false);
