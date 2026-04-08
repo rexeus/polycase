@@ -8,25 +8,9 @@ const packageDir = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig([
   createPackageBuildConfig({
     packageDir,
-    entry: ["src/entry.ts"],
-    format: ["esm"],
-    dts: false,
-    clean: false,
-    deps: {
-      neverBundle: ["oxfmt", "rolldown"],
-    },
-    nodeProtocol: true,
-    banner: "#!/usr/bin/env node",
-    runSharedPostBuild: false,
-  }),
-  createPackageBuildConfig({
-    packageDir,
-    entry: ["src/index.ts", "src/cli.ts"],
-    deps: {
-      neverBundle: ["oxfmt", "rolldown"],
-    },
+    entry: ["src/index.ts"],
     nodeProtocol: true,
     libSourceDir: false,
-    templateSourceDir: "src/generators/templates",
+    templateSourceDir: false,
   }),
 ]);

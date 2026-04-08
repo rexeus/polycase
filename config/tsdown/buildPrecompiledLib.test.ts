@@ -11,7 +11,7 @@ const tempDirectories: string[] = [];
 
 function createPackageFixture(packageName: string): string {
   const packageDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), `polycase-precompiled-lib-${packageName}-`),
+    path.join(os.tmpdir(), `polycase-precompiled-lib-${packageName}-`)
   );
 
   tempDirectories.push(packageDir);
@@ -41,15 +41,15 @@ describe("getTypeScriptFiles", () => {
 
     writeFile(
       path.join(runtimeSourceDir, "index.ts"),
-      "export * from './nested/value';",
+      "export * from './nested/value';"
     );
     writeFile(
       path.join(runtimeSourceDir, "nested", "value.ts"),
-      "export const value: number = 42;",
+      "export const value: number = 42;"
     );
     writeFile(
       path.join(runtimeSourceDir, "nested", "ignored.d.ts"),
-      "export type Ignored = string;",
+      "export type Ignored = string;"
     );
 
     expect(getTypeScriptFiles(runtimeSourceDir)).toEqual([
@@ -65,23 +65,23 @@ describe("buildPrecompiledLib", () => {
 
     writeFile(
       path.join(packageDir, "src", "lib", "index.ts"),
-      "export * from './nested/value.js';\n",
+      "export * from './nested/value.js';\n"
     );
     writeFile(
       path.join(packageDir, "src", "lib", "runtime.ts"),
-      "export const greet = (name: string): string => `hello ${name}`;\n",
+      "export const greet = (name: string): string => `hello ${name}`;\n"
     );
     writeFile(
       path.join(packageDir, "src", "lib", "nested", "value.ts"),
-      "export const value: number = 42;\n",
+      "export const value: number = 42;\n"
     );
     writeFile(
       path.join(packageDir, "src", "types", "runtime.d.ts"),
-      "export declare const greet: (name: string) => string;\n",
+      "export declare const greet: (name: string) => string;\n"
     );
     writeFile(
       path.join(packageDir, "src", "types", "nested", "value.d.ts"),
-      "export declare const value: number;\n",
+      "export declare const value: number;\n"
     );
 
     buildPrecompiledLib({
@@ -92,37 +92,37 @@ describe("buildPrecompiledLib", () => {
     });
 
     expect(
-      fs.readFileSync(path.join(packageDir, "dist", "lib", "index.ts"), "utf8"),
+      fs.readFileSync(path.join(packageDir, "dist", "lib", "index.ts"), "utf8")
     ).toBe("export * from './nested/value.js';\n");
 
     const runtimeOutput = fs.readFileSync(
       path.join(packageDir, "dist", "lib", "runtime.js"),
-      "utf8",
+      "utf8"
     );
     const nestedOutput = fs.readFileSync(
       path.join(packageDir, "dist", "lib", "nested", "value.js"),
-      "utf8",
+      "utf8"
     );
 
     expect(runtimeOutput).toContain(
-      "export const greet = (name) => `hello ${name}`;",
+      "export const greet = (name) => `hello ${name}`;"
     );
     expect(runtimeOutput).not.toContain(": string");
     expect(nestedOutput).toContain("export const value = 42;");
     expect(
-      fs.existsSync(path.join(packageDir, "dist", "lib", "runtime.ts")),
+      fs.existsSync(path.join(packageDir, "dist", "lib", "runtime.ts"))
     ).toBe(false);
     expect(
       fs.readFileSync(
         path.join(packageDir, "dist", "lib", "runtime.d.ts"),
-        "utf8",
-      ),
+        "utf8"
+      )
     ).toBe("export declare const greet: (name: string) => string;\n");
     expect(
       fs.readFileSync(
         path.join(packageDir, "dist", "lib", "nested", "value.d.ts"),
-        "utf8",
-      ),
+        "utf8"
+      )
     ).toBe("export declare const value: number;\n");
   });
 });

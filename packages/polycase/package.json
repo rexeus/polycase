@@ -49,5 +49,8 @@
   "bugs": {
     "url": "https://github.com/rexeus/polycase/issues"
   },
-  "homepage": "https://github.com/rexeus/polycase#readme"
+  "homepage": "https://github.com/rexeus/polycase#readme",
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }
