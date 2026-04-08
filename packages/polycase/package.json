@@ -1,6 +1,6 @@
 {
   "name": "polycase",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Case conversion utilities for TypeScript",
   "type": "module",
   "sideEffects": false,
