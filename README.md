@@ -2,7 +2,7 @@
 
 A small, dependency-free, TypeScript-first toolkit for predictable string case conversion.
 Unicode-aware tokenization, 11 built-in cases, and a single `toCase()` dispatcher — in under 2 kB
-gzipped.
+gzip.
 
 ## Why polycase?
 
@@ -25,7 +25,7 @@ tokenize("Cafe\u0301Noir"); //=> ["café", "noir"]  (NFC-normalized)
 ```
 
 - **Zero dependencies** — nothing to audit, nothing to break
-- **< 1 kB min+gzip** — ESM and CommonJS, with bundled types
+- **< 2 kB gzip** — ESM and CommonJS, with bundled types
 - **Predictable tokenization** — separators, camelCase, PascalCase, acronym runs, and numeric
   boundaries all handled by one deterministic algorithm
 - **Idempotent** — applying the same case twice always returns the same result
@@ -82,7 +82,7 @@ config/              Shared build and lint configuration
 pnpm install          # install all dependencies
 pnpm build            # build the package
 pnpm test             # run all tests (vitest)
-pnpm lint             # check code style (eslint)
+pnpm lint             # check code style (oxlint)
 pnpm format           # auto-format with prettier
 pnpm typecheck        # run tsc --noEmit
 ```

@@ -3,7 +3,7 @@
 A small, dependency-free, TypeScript-first toolkit for predictable string case conversion.
 
 - **Zero dependencies** — nothing to audit, nothing to break
-- **< 1 kB min+gzip** — ESM and CommonJS, with bundled types
+- **< 2 kB gzip** — ESM and CommonJS, with bundled types
 - **Predictable tokenization** — separators, camelCase, PascalCase, acronym runs, and numeric
   boundaries all handled by one deterministic algorithm
 - **Idempotent** — applying the same case twice always returns the same result
