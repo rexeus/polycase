@@ -9,4 +9,8 @@ describe("capitalCase", () => {
   it("uses a space separator by default", () => {
     expect(capitalCase("helloWorld")).toBe("Hello World");
   });
+
+  it("joins with no gap when separator is empty", () => {
+    expect(capitalCase("hello world", { separator: "" })).toBe("HelloWorld");
+  });
 });

@@ -34,4 +34,12 @@ describe("titleCase", () => {
   it("keeps the default minor-word behavior when no override is provided", () => {
     expect(titleCase("war and peace")).toBe("War and Peace");
   });
+
+  it("capitalizes boundary tokens when all tokens are minor words", () => {
+    expect(titleCase("a for the")).toBe("A for The");
+  });
+
+  it("capitalizes a single minor-word token", () => {
+    expect(titleCase("the")).toBe("The");
+  });
 });

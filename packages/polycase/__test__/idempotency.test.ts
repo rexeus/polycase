@@ -1,32 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
-  camelCase,
   capitalCase,
-  constantCase,
-  headerCase,
-  kebabCase,
   lowerCase,
-  pascalCase,
   sentenceCase,
-  snakeCase,
   titleCase,
   upperCase,
 } from "../src";
-import { sourceCorpus } from "./sharedCorpus";
-
-const caseFunctions = {
-  camel: camelCase,
-  capital: capitalCase,
-  constant: constantCase,
-  header: headerCase,
-  kebab: kebabCase,
-  lower: lowerCase,
-  pascal: pascalCase,
-  sentence: sentenceCase,
-  snake: snakeCase,
-  title: titleCase,
-  upper: upperCase,
-} as const;
+import { caseFunctions, sourceCorpus } from "./sharedCorpus";
 
 describe("case function idempotency", () => {
   for (const [caseName, caseFunction] of Object.entries(caseFunctions) as Array<
@@ -59,6 +39,20 @@ describe("case function idempotency", () => {
     const options = { minorWords: ["and", "of"] };
     const once = titleCase("lord of war and peace", options);
     const twice = titleCase(once, options);
+
+    expect(twice).toBe(once);
+  });
+
+  it("lower case remains idempotent with a custom separator", () => {
+    const once = lowerCase("helloWorld", { separator: "-" });
+    const twice = lowerCase(once, { separator: "-" });
+
+    expect(twice).toBe(once);
+  });
+
+  it("upper case remains idempotent with a custom separator", () => {
+    const once = upperCase("helloWorld", { separator: "-" });
+    const twice = upperCase(once, { separator: "-" });
 
     expect(twice).toBe(once);
   });

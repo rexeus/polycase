@@ -50,4 +50,10 @@ describe("toCase", () => {
       "Unsupported case name: invalid"
     );
   });
+
+  it("thrown error is an instance of PolycaseError with correct name", () => {
+    expect(() => toCase("invalid" as never, "hello world")).toThrow(
+      expect.objectContaining({ name: "PolycaseError" })
+    );
+  });
 });

@@ -9,4 +9,8 @@ describe("upperCase", () => {
   it("uses a space separator by default", () => {
     expect(upperCase("helloWorld")).toBe("HELLO WORLD");
   });
+
+  it("joins with no gap when separator is empty", () => {
+    expect(upperCase("hello world", { separator: "" })).toBe("HELLOWORLD");
+  });
 });

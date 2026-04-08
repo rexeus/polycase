@@ -39,4 +39,24 @@ describe("tokenize", () => {
   it("normalizes decomposed unicode input", () => {
     expect(tokenize("Cafe\u0301Noir")).toEqual(["café", "noir"]);
   });
+
+  it("treats emoji as separators", () => {
+    expect(tokenize("hello🌍world")).toEqual(["hello", "world"]);
+  });
+
+  it("returns empty array for emoji-only input", () => {
+    expect(tokenize("🎉🎊")).toEqual([]);
+  });
+
+  it("treats digit-only strings as a single token", () => {
+    expect(tokenize("123")).toEqual(["123"]);
+  });
+
+  it("tokenizes version strings", () => {
+    expect(tokenize("v1.2.3")).toEqual(["v", "1", "2", "3"]);
+  });
+
+  it("handles Arabic text", () => {
+    expect(tokenize("مرحبا")).toEqual(["مرحبا"]);
+  });
 });
