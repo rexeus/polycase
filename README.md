@@ -1,8 +1,7 @@
 # polycase
 
 A small, dependency-free, TypeScript-first toolkit for predictable string case conversion.
-Unicode-aware tokenization, 11 built-in cases, and a single `toCase()` dispatcher — in under 2 kB
-gzip.
+Unicode-aware tokenization, 11 built-in cases, and a single `toCase()` dispatcher — in ~3 kB gzip.
 
 ## Why polycase?
 
@@ -25,7 +24,7 @@ tokenize("Cafe\u0301Noir"); //=> ["café", "noir"]  (NFC-normalized)
 ```
 
 - **Zero dependencies** — nothing to audit, nothing to break
-- **< 2 kB gzip** — ESM and CommonJS, with bundled types
+- **~3 kB gzip** — ESM and CommonJS, with bundled types
 - **Predictable tokenization** — separators, camelCase, PascalCase, acronym runs, and numeric
   boundaries all handled by one deterministic algorithm
 - **Idempotent** — applying the same case twice always returns the same result
@@ -39,7 +38,7 @@ yarn add polycase
 ```
 
 ```ts
-import { camelCase, titleCase, toCase } from "polycase";
+import { camelCase, isCamelCase, titleCase, toCase, whichCases } from "polycase";
 
 camelCase("hello world");
 //=> "helloWorld"
@@ -49,6 +48,12 @@ titleCase("the lord of the rings");
 
 toCase("upper", "getHTTPSUrl", { separator: "." });
 //=> "GET.HTTPS.URL"
+
+isCamelCase("helloWorld");
+//=> true
+
+whichCases("HELLO_WORLD");
+//=> ["constant"]
 ```
 
 For the full API reference, see [`packages/polycase/README.md`](./packages/polycase/README.md).

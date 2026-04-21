@@ -3,7 +3,7 @@
 A small, dependency-free, TypeScript-first toolkit for predictable string case conversion.
 
 - **Zero dependencies** — nothing to audit, nothing to break
-- **< 2 kB gzip** — ESM and CommonJS, with bundled types
+- **~3 kB gzip** — ESM and CommonJS, with bundled types
 - **Predictable tokenization** — separators, camelCase, PascalCase, acronym runs, and numeric
   boundaries all handled by one deterministic algorithm
 - **Idempotent** — applying the same case twice always returns the same result
@@ -219,6 +219,79 @@ Passing an unsupported case name at runtime throws `PolycaseError`:
 ```ts
 toCase("invalid" as never, "hello world");
 // throws PolycaseError: "Unsupported case name: invalid"
+```
+
+### Detecting a string's case
+
+Every case format has a matching boolean helper, plus a general `whichCases` that returns every case
+a string is already in. Detection is defined as a **round-trip**: an input `s` is considered to be
+in case `C` when `C(s) === s` and `s` contains at least one token. Empty and whitespace-only inputs
+always return `false` (or `[]`).
+
+#### `isCamelCase(input)` · `isPascalCase(input)` · `isSnakeCase(input)` · `isKebabCase(input)` · `isConstantCase(input)` · `isHeaderCase(input)`
+
+```ts
+isCamelCase("helloWorld"); //=> true
+isCamelCase("HelloWorld"); //=> false
+
+isPascalCase("HelloWorld"); //=> true
+isSnakeCase("hello_world"); //=> true
+isKebabCase("hello-world"); //=> true
+isConstantCase("HELLO_WORLD"); //=> true
+isHeaderCase("Hello-World"); //=> true
+```
+
+#### `isCapitalCase(input, options?)` · `isLowerCase(input, options?)` · `isUpperCase(input, options?)` · `isSentenceCase(input, options?)`
+
+Each accepts the same options as its case-conversion counterpart.
+
+```ts
+isCapitalCase("Hello World"); //=> true
+isCapitalCase("Hello.World", { separator: "." }); //=> true
+
+isLowerCase("hello world"); //=> true
+isLowerCase("hello-world", { separator: "-" }); //=> true
+
+isUpperCase("HELLO WORLD"); //=> true
+isSentenceCase("Hello world"); //=> true
+```
+
+#### `isTitleCase(input, options?)`
+
+Accepts the same `minorWords` option as `titleCase`.
+
+```ts
+isTitleCase("The Lord of the Rings"); //=> true
+isTitleCase("War And Peace", { minorWords: ["war", "peace"] }); //=> true
+```
+
+#### `whichCases(input)`
+
+Returns every polycase case style `input` is already in, using default options. Because single-token
+inputs like `"hello"` satisfy multiple cases, the result is an ordered `readonly CaseName[]` rather
+than a single name. To check against custom options, use the dedicated `isXCase` helpers.
+
+```ts
+whichCases("helloWorld"); //=> ["camel"]
+whichCases("HelloWorld"); //=> ["pascal"]
+whichCases("hello_world"); //=> ["snake"]
+whichCases("hello-world"); //=> ["kebab"]
+whichCases("HELLO_WORLD"); //=> ["constant"]
+whichCases("Hello-World"); //=> ["header"]
+whichCases("hello world"); //=> ["lower"]
+whichCases("HELLO WORLD"); //=> ["upper"]
+whichCases("Hello world"); //=> ["sentence"]
+whichCases("Hello World"); //=> ["capital", "title"]
+
+// Single-token inputs match multiple compatible cases.
+whichCases("hello"); //=> ["camel", "kebab", "lower", "snake"]
+whichCases("Hello"); //=> ["capital", "header", "pascal", "sentence", "title"]
+whichCases("HELLO"); //=> ["constant", "upper"]
+
+// Inputs that are not canonical in any case return an empty array.
+whichCases("XMLParser"); //=> []
+whichCases("  multiple   separators---here__now  "); //=> []
+whichCases(""); //=> []
 ```
 
 ### `tokenize(input)`
